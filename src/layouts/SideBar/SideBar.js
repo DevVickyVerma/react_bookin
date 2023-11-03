@@ -186,12 +186,14 @@ const Sidebar = () => {
 
       <div className="sticky">
         <div className="app-sidebar__overlay"></div>
+        <div style={{ marginTop: "65px" }}></div>
         <aside
-          className="app-sidebar"
+          // className="app-sidebar"
+          className="d-flex flex-row vertical-bar"
           onMouseOver={() => Onhover()}
           onMouseOut={() => Outhover()}
         >
-          <Scrollbars style={{ paddingBottom: "60px" }}>
+          <div style={{ paddingBottom: "60px" }}>
             <div className="header side-header">
               <Link to={`/dashboard/`} className="header-brand1">
                 <img
@@ -240,26 +242,24 @@ const Sidebar = () => {
                 </svg>
               </div>
               <ul
-                className="side-menu mt-3"
-                id="sidebar-main"
-                style={{ marginBottom: "61px" }}
+                // className="side-menu mt-3"
+                // id="sidebar-main"
+                style={{ display: "flex", flexWrap: "wrap" }}
               >
                 {MENUITEMS.map((Item, i) => (
                   <Fragment key={i}>
                     {Item.Items.map((menuItem, i) =>
                       menuItem.visibility ? (
                         <li
-                          className={`slide ${
-                            menuItem.active ? "is-expanded" : ""
-                          }`}
+                          className={`slide ${menuItem.active ? "is-expanded" : ""
+                            }`}
                           key={i}
                         >
                           {menuItem.type === "link" ? (
                             <NavLink
                               to={menuItem.path + "/"}
-                              className={`side-menu__item ${
-                                menuItem.active ? "active" : ""
-                              }`}
+                              className={`side-menu__item ${menuItem.active ? "active" : ""
+                                }`}
                               onClick={() => {
                                 setNavActive(menuItem);
                                 toggletNavActive(menuItem);
@@ -289,12 +289,20 @@ const Sidebar = () => {
                           {menuItem.type === "sub" ? (
                             <div
                               to={menuItem.path + "/"}
-                              className={`side-menu__item ${
-                                menuItem.active ? "active" : ""
-                              }`}
+                              className={`side-menu__item ${menuItem.active ? "active" : ""
+                                }`}
                               onClick={(event) => {
                                 event.preventDefault();
                                 setNavActive(menuItem);
+                              }}
+                              onMouseEnter={(event) => {
+                                event.preventDefault();
+                                setNavActive(menuItem);
+                              }}
+                              onMouseLeave={(event) => {
+                                event.preventDefault();
+                                // Optionally, you can clear the active state when the mouse leaves the element.
+                                setNavActive(""); // Assuming you have a way to clear the active state.
                               }}
                               style={{ cursor: "pointer" }}
                             >
@@ -326,10 +334,10 @@ const Sidebar = () => {
                               style={
                                 menuItem.active
                                   ? {
-                                      opacity: 1,
-                                      transition: "opacity 500ms ease-in",
-                                      display: "block",
-                                    }
+                                    opacity: 1,
+                                    transition: "opacity 500ms ease-in",
+                                    display: "block",
+                                  }
                                   : { display: "none" }
                               }
                             >
@@ -383,7 +391,7 @@ const Sidebar = () => {
                                           (childrenSubItem, key) => (
                                             <li key={key}>
                                               {childrenSubItem.type ===
-                                              "link" ? (
+                                                "link" ? (
                                                 <NavLink
                                                   to={
                                                     childrenSubItem.path + "/"
@@ -443,7 +451,7 @@ const Sidebar = () => {
                 </svg>
               </div>
             </div>
-          </Scrollbars>
+          </div>
         </aside>
       </div>
     </>
