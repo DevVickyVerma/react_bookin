@@ -1279,3 +1279,7 @@ span.uk-date-time {
   /* min-height: 71px; */
   /* margin-top: 61px; */
 }
+
+.vertical-sidebar-container {
+  padding-bottom: 60px;
+}

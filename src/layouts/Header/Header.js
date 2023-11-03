@@ -5,10 +5,12 @@ import { ToastContainer } from "react-toastify";
 import * as loderdata from "../../data/Component/loderdata/loderdata";
 
 import withApi from "../../Utils/ApiHelper";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Loaderimg from "../../Utils/Loader";
 import SingleAuthModal from "../../data/Modal/SingleAuthModal";
 import { SuccessAlert } from "../../Utils/ToastUtils";
+import { useMyContext } from "../../Utils/MyContext";
+import { toggleVerticalSidebar } from "../../Redux/sidebarSlice";
 
 const Header = (props) => {
   const { isLoading, getData } = props;
@@ -126,6 +128,9 @@ const Header = (props) => {
   const [ukDate, setUkDate] = useState("");
   const [ukTime, setUkTime] = useState("");
 
+
+  const dispatch = useDispatch();
+
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentDateTime = new Date();
@@ -160,6 +165,12 @@ const Header = (props) => {
       clearInterval(intervalId);
     };
   }, []);
+  const handleSideBarChange = () => {
+    dispatch(toggleVerticalSidebar());
+    console.log("topress");
+  }
+
+  // console.log(isVerticalSidebarOpen, "isVerticalSidebarOpen");
   return (
     <Navbar expand="md" className="app-header header sticky">
       <Container fluid className="main-container">
@@ -170,6 +181,13 @@ const Header = (props) => {
             to="#"
             onClick={() => openCloseSidebar()}
           ></Link>
+
+          <div
+            // onClick={() => dispatch(toggleVerticalSidebar())}
+            onClick={handleSideBarChange}
+          >
+            future button
+          </div>
           <div className="responsive-logo">
             <Link to={`/dashboard/`} className="header-logo">
               <img
@@ -227,7 +245,7 @@ const Header = (props) => {
                 </div>
 
                 {storedKeyRef.current === "false" &&
-                isProfileUpdatePermissionAvailable ? (
+                  isProfileUpdatePermissionAvailable ? (
                   <>
                     <span
                       className=""
@@ -319,7 +337,7 @@ const Header = (props) => {
                     </div>
                     <div className="dropdown-divider m-0"></div>
                     {usernotification &&
-                    usernotification?.notifications?.length > 0 ? (
+                      usernotification?.notifications?.length > 0 ? (
                       <Dropdown.Item
                         eventKey="closeDropdown"
                         onClick={handleViewAllNotificationsClick}
@@ -394,7 +412,7 @@ const Header = (props) => {
           </div>
         </div>
       </Container>
-    </Navbar>
+    </Navbar >
   );
 };
 

@@ -35016,9 +35016,9 @@ body.rtl {
 }
 
 @media (min-width: 992px) {
-  .app-content {
+  /* .app-content {
     margin-left: 270px;
-  }
+  } */
 }
 
 @media (max-width: 991px) {

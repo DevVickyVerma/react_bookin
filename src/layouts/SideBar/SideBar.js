@@ -6,11 +6,10 @@ import { useSelector } from "react-redux";
 import Loaderimg from "../../Utils/Loader";
 const Sidebar = () => {
   const [mainmenu, setMainMenu] = useState(MENUITEMS);
-
   const [permissionsArray, setpermissionsArray] = useState([]);
-
   const UserPermissions = useSelector((state) => state?.data?.data);
   const loading = useSelector((state) => state.data.loading);
+  const [isVerticalSidebarOpen, setIsVerticalSidebarOpen] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
   const tokenUpdated = localStorage.getItem("tokenupdate") === "true";
@@ -21,7 +20,7 @@ const Sidebar = () => {
 
       localStorage.setItem("tokenupdate", "false"); // Update the value to string "false"
     }
-  }, [token, tokenUpdated]);
+  }, [token, tokenUpdated])
 
   useEffect(() => {
     if (UserPermissions) {
@@ -189,271 +188,567 @@ const Sidebar = () => {
         <div style={{ marginTop: "65px" }}></div>
         <aside
           // className="app-sidebar"
-          className="d-flex flex-row vertical-bar"
+          // className="d-flex flex-row vertical-bar"
+          className={`${isVerticalSidebarOpen ? "app-sidebar" : "d-flex flex-row vertical-bar"} `}
           onMouseOver={() => Onhover()}
           onMouseOut={() => Outhover()}
         >
-          <div style={{ paddingBottom: "60px" }}>
-            <div className="header side-header">
-              <Link to={`/dashboard/`} className="header-brand1">
-                <img
-                  src={require("../../assets/images/brand/logo.png")}
-                  className="header-brand-img desktop-logo"
-                  alt={"logo"}
-                />
-                <img
-                  src={require("../../assets/images/brand/logo-1.png")}
-                  className="header-brand-img toggle-logo"
-                  alt={"logo-1"}
-                />
-                <img
-                  src={require("../../assets/images/brand/logo-2.png")}
-                  className="header-brand-img light-logo"
-                  alt={"logo-2"}
-                />
-                <img
-                  src={require("../../assets/images/brand/logo-3.png")}
-                  className="header-brand-img light-logo1"
-                  alt={"logo-3"}
-                />
-              </Link>
-            </div>
-            <div className="main-sidemenu">
-              <div className="slide-left disabled" id="slide-left">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
-                </svg>
-              </div>
-              <div className="slide-leftRTL disabled" id="slide-leftRTL">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
-                </svg>
-              </div>
-              <ul
-                // className="side-menu mt-3"
-                // id="sidebar-main"
-                style={{ display: "flex", flexWrap: "wrap" }}
-              >
-                {MENUITEMS.map((Item, i) => (
-                  <Fragment key={i}>
-                    {Item.Items.map((menuItem, i) =>
-                      menuItem.visibility ? (
-                        <li
-                          className={`slide ${menuItem.active ? "is-expanded" : ""
-                            }`}
-                          key={i}
-                        >
-                          {menuItem.type === "link" ? (
-                            <NavLink
-                              to={menuItem.path + "/"}
-                              className={`side-menu__item ${menuItem.active ? "active" : ""
-                                }`}
-                              onClick={() => {
-                                setNavActive(menuItem);
-                                toggletNavActive(menuItem);
-                              }}
-                            >
-                              <i
-                                className={`side-menu__icon fa fa-${menuItem.icon}`}
-                                aria-hidden="true"
-                              ></i>
-                              <span className="side-menu__label">
-                                {menuItem.title}
-                              </span>
-                              {menuItem.badge ? (
-                                <label
-                                  className={`${menuItem.badge} side-badge`}
-                                >
-                                  {menuItem.badgetxt}
-                                </label>
-                              ) : (
-                                ""
-                              )}
-                            </NavLink>
-                          ) : (
-                            ""
-                          )}
+          {
+            isVerticalSidebarOpen ? <>
 
-                          {menuItem.type === "sub" ? (
-                            <div
-                              to={menuItem.path + "/"}
-                              className={`side-menu__item ${menuItem.active ? "active" : ""
+              <Scrollbars
+                className={`${isVerticalSidebarOpen ? "vertical-sidebar-container" : ""} `}
+              // style={{ paddingBottom: "60px" }}
+              >
+                <div className="header side-header">
+                  <Link to={`/dashboard/`} className="header-brand1">
+                    <img
+                      src={require("../../assets/images/brand/logo.png")}
+                      className="header-brand-img desktop-logo"
+                      alt={"logo"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-1.png")}
+                      className="header-brand-img toggle-logo"
+                      alt={"logo-1"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-2.png")}
+                      className="header-brand-img light-logo"
+                      alt={"logo-2"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-3.png")}
+                      className="header-brand-img light-logo1 "
+                      alt={"logo-3"}
+                    />
+                  </Link>
+                </div>
+                <div className="main-sidemenu">
+                  <div className="slide-left disabled" id="slide-left">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
+                    </svg>
+                  </div>
+                  <div className="slide-leftRTL disabled" id="slide-leftRTL">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
+                    </svg>
+                  </div>
+                  <ul
+                    className={`${isVerticalSidebarOpen ? "side-menu mt-3" : "d-flex flex-wrap px-2 py-1 "} `}
+                    id={`${isVerticalSidebarOpen ? "sidebar-main" : ""} `}
+                  // className="side-menu mt-3"
+                  // id="sidebar-main"
+                  // style={{ display: "flex", flexWrap: "wrap", padding: "9x 37px" }}
+                  >
+                    {MENUITEMS.map((Item, i) => (
+                      <Fragment key={i}>
+                        {Item.Items.map((menuItem, i) =>
+                          menuItem.visibility ? (
+                            <li
+                              className={`slide ${menuItem.active ? "is-expanded" : ""
                                 }`}
-                              onClick={(event) => {
-                                event.preventDefault();
-                                setNavActive(menuItem);
-                              }}
-                              onMouseEnter={(event) => {
-                                event.preventDefault();
-                                setNavActive(menuItem);
-                              }}
-                              onMouseLeave={(event) => {
-                                event.preventDefault();
-                                // Optionally, you can clear the active state when the mouse leaves the element.
-                                setNavActive(""); // Assuming you have a way to clear the active state.
-                              }}
-                              style={{ cursor: "pointer" }}
+                              key={i}
                             >
-                              <i
-                                className={`side-menu__icon fa fa-${menuItem.icon}`}
-                              ></i>
-                              <span className="side-menu__label">
-                                {menuItem.title}
-                              </span>
-                              {menuItem.badge ? (
-                                <label
-                                  className={`${menuItem.badge} side-badge`}
+                              {menuItem.type === "link" ? (
+                                <NavLink
+                                  to={menuItem.path + "/"}
+                                  className={`side-menu__item ${menuItem.active ? "active" : ""
+                                    }`}
+                                  onClick={() => {
+                                    setNavActive(menuItem);
+                                    toggletNavActive(menuItem);
+                                  }}
                                 >
-                                  {menuItem.badgetxt}
-                                </label>
+                                  <i
+                                    className={`side-menu__icon fa fa-${menuItem.icon}`}
+                                    aria-hidden="true"
+                                  ></i>
+                                  <span className="side-menu__label">
+                                    {menuItem.title}
+                                  </span>
+                                  {menuItem.badge ? (
+                                    <label
+                                      className={`${menuItem.badge} side-badge`}
+                                    >
+                                      {menuItem.badgetxt}
+                                    </label>
+                                  ) : (
+                                    ""
+                                  )}
+                                </NavLink>
                               ) : (
                                 ""
                               )}
-                              <i
-                                className={`${menuItem.background} fa angle fa-angle-right `}
-                              ></i>
-                            </div>
-                          ) : (
-                            ""
-                          )}
-                          {menuItem.children ? (
-                            <ul
-                              className="slide-menu"
-                              style={
-                                menuItem.active
-                                  ? {
-                                    opacity: 1,
-                                    transition: "opacity 500ms ease-in",
-                                    display: "block",
+
+                              {menuItem.type === "sub" ? (
+                                <div
+                                  to={menuItem.path + "/"}
+                                  className={`side-menu__item ${menuItem.active ? "active" : ""
+                                    }`}
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    setNavActive(menuItem);
+                                  }}
+                                  onMouseEnter={() => {
+                                    if (!isVerticalSidebarOpen) {
+                                      setNavActive(menuItem);
+                                    }
+                                  }}
+                                  // onMouseLeave={() => {
+                                  //   if (menuItem) {
+                                  //     // Check if menuItem is not null or undefined
+                                  //     setNavActive(menuItem);
+                                  //   }
+                                  //   // Optionally, you can clear the active state when the mouse leaves the element.
+                                  //   // setNavActive(null); // Assuming you have a way to clear the active state.
+                                  // }}
+                                  style={{ cursor: "pointer" }
                                   }
-                                  : { display: "none" }
-                              }
-                            >
-                              {menuItem.children.map((childrenItem, index) => {
-                                return childrenItem.visibility ? (
-                                  <li key={index}>
-                                    {childrenItem.type === "sub" ? (
-                                      <a
-                                        href="javascript"
-                                        className="sub-side-menu__item"
-                                        onClick={(event) => {
-                                          event.preventDefault();
-                                          toggletNavActive(childrenItem);
-                                        }}
-                                      >
-                                        <span className="sub-side-menu__label">
-                                          {childrenItem.title}
-                                        </span>
-                                        {childrenItem.active ? (
-                                          <i className="sub-angle  fa fa-angle-down"></i>
+                                >
+                                  <i
+                                    className={`side-menu__icon fa fa-${menuItem.icon}`}
+                                  ></i>
+                                  <span className="side-menu__label">
+                                    {menuItem.title}
+                                  </span>
+                                  {menuItem.badge ? (
+                                    <label
+                                      className={`${menuItem.badge} side-badge`}
+                                    >
+                                      {menuItem.badgetxt}
+                                    </label>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <i
+                                    className={`${menuItem.background} fa angle fa-angle-right `}
+                                  ></i>
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                              {menuItem.children ? (
+                                <ul
+                                  className="slide-menu"
+                                  style={
+                                    menuItem.active
+                                      ? {
+                                        opacity: 1,
+                                        transition: "opacity 500ms ease-in",
+                                        display: "block",
+                                        background: isVerticalSidebarOpen ? "initial" : "white", // Conditionally set background
+                                        position: isVerticalSidebarOpen ? "initial" : "fixed", // Conditionally set position                                
+                                        zIndex: isVerticalSidebarOpen ? "initial" : 1, // Conditionally set zIndex
+                                        margin: isVerticalSidebarOpen ? "initial" : "auto", // Conditionally set margin
+                                      }
+                                      : { display: "none" }
+                                  }
+                                >
+                                  {menuItem.children.map((childrenItem, index) => {
+                                    return childrenItem.visibility ? (
+                                      <li key={index}>
+                                        {childrenItem.type === "sub" ? (
+                                          <a
+                                            href="javascript"
+                                            className="sub-side-menu__item"
+                                            onClick={(event) => {
+                                              event.preventDefault();
+                                              toggletNavActive(childrenItem);
+                                            }}
+                                          >
+                                            <span className="sub-side-menu__label">
+                                              {childrenItem.title}
+                                            </span>
+                                            {childrenItem.active ? (
+                                              <i className="sub-angle  fa fa-angle-down"></i>
+                                            ) : (
+                                              <i className="sub-angle fa fa-angle-right"></i>
+                                            )}
+                                          </a>
                                         ) : (
-                                          <i className="sub-angle fa fa-angle-right"></i>
+                                          ""
                                         )}
-                                      </a>
-                                    ) : (
-                                      ""
-                                    )}
-                                    {childrenItem.type === "link" ? (
-                                      <NavLink
-                                        to={childrenItem.path + "/"}
-                                        className="slide-item"
-                                        onClick={() =>
-                                          toggletNavActive(childrenItem)
-                                        }
-                                      >
-                                        {childrenItem.title}
-                                      </NavLink>
-                                    ) : (
-                                      ""
-                                    )}
-                                    {childrenItem.children ? (
-                                      <ul
-                                        className="sub-slide-menu"
-                                        style={
-                                          childrenItem.active
-                                            ? { display: "block" }
-                                            : { display: "none" }
-                                        }
-                                      >
-                                        {childrenItem.children.map(
-                                          (childrenSubItem, key) => (
-                                            <li key={key}>
-                                              {childrenSubItem.type ===
-                                                "link" ? (
-                                                <NavLink
-                                                  to={
-                                                    childrenSubItem.path + "/"
-                                                  }
-                                                  className={`${"sub-slide-item"}`}
-                                                  onClick={() =>
-                                                    toggletNavActive(
-                                                      childrenSubItem
-                                                    )
-                                                  }
-                                                >
-                                                  {childrenSubItem.title}
-                                                </NavLink>
-                                              ) : (
-                                                ""
-                                              )}
-                                            </li>
-                                          )
+                                        {childrenItem.type === "link" ? (
+                                          <NavLink
+                                            to={childrenItem.path + "/"}
+                                            className="slide-item"
+                                            onClick={() =>
+                                              toggletNavActive(childrenItem)
+                                            }
+                                          >
+                                            {childrenItem.title}
+                                          </NavLink>
+                                        ) : (
+                                          ""
                                         )}
-                                      </ul>
-                                    ) : (
-                                      ""
-                                    )}
-                                  </li>
-                                ) : null;
-                              })}
-                            </ul>
-                          ) : (
-                            ""
-                          )}
-                        </li>
-                      ) : null
-                    )}
-                  </Fragment>
-                ))}
-              </ul>
-              <div className="slide-right" id="slide-right">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
-                </svg>
+                                        {childrenItem.children ? (
+                                          <ul
+                                            className="sub-slide-menu"
+                                            style={
+                                              childrenItem.active
+                                                ? { display: "block" }
+                                                : { display: "none" }
+                                            }
+                                          >
+                                            {childrenItem.children.map(
+                                              (childrenSubItem, key) => (
+                                                <li key={key}>
+                                                  {childrenSubItem.type ===
+                                                    "link" ? (
+                                                    <NavLink
+                                                      to={
+                                                        childrenSubItem.path + "/"
+                                                      }
+                                                      className={`${"sub-slide-item"}`}
+                                                      onClick={() =>
+                                                        toggletNavActive(
+                                                          childrenSubItem
+                                                        )
+                                                      }
+                                                    >
+                                                      {childrenSubItem.title}
+                                                    </NavLink>
+                                                  ) : (
+                                                    ""
+                                                  )}
+                                                </li>
+                                              )
+                                            )}
+                                          </ul>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </li>
+                                    ) : null;
+                                  })}
+                                </ul>
+                              ) : (
+                                ""
+                              )}
+                            </li>
+                          ) : null
+                        )}
+                      </Fragment>
+                    ))}
+                  </ul>
+                  <div className="slide-right" id="slide-right">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                    </svg>
+                  </div>
+                  <div className="slide-rightRTL" id="slide-rightRTL">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                    </svg>
+                  </div>
+                </div>
+              </Scrollbars>
+            </> : <>
+
+              <div
+                className={`${isVerticalSidebarOpen ? "vertical-sidebar-container" : ""} `}
+              // style={{ paddingBottom: "60px" }}
+              >
+                <div className="header side-header">
+                  <Link to={`/dashboard/`} className="header-brand1">
+                    <img
+                      src={require("../../assets/images/brand/logo.png")}
+                      className="header-brand-img desktop-logo"
+                      alt={"logo"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-1.png")}
+                      className="header-brand-img toggle-logo"
+                      alt={"logo-1"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-2.png")}
+                      className="header-brand-img light-logo"
+                      alt={"logo-2"}
+                    />
+                    <img
+                      src={require("../../assets/images/brand/logo-3.png")}
+                      className="header-brand-img light-logo1 "
+                      alt={"logo-3"}
+                    />
+                  </Link>
+                </div>
+                <div className="main-sidemenu">
+                  <div className="slide-left disabled" id="slide-left">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
+                    </svg>
+                  </div>
+                  <div className="slide-leftRTL disabled" id="slide-leftRTL">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z" />
+                    </svg>
+                  </div>
+                  <ul
+                    className={`${isVerticalSidebarOpen ? "side-menu mt-3" : "d-flex flex-wrap px-2 py-1 "} `}
+                    id={`${isVerticalSidebarOpen ? "sidebar-main" : ""} `}
+                  // className="side-menu mt-3"
+                  // id="sidebar-main"
+                  // style={{ display: "flex", flexWrap: "wrap", padding: "9x 37px" }}
+                  >
+                    {MENUITEMS.map((Item, i) => (
+                      <Fragment key={i}>
+                        {Item.Items.map((menuItem, i) =>
+                          menuItem.visibility ? (
+                            <li
+                              className={`slide ${menuItem.active ? "is-expanded" : ""
+                                }`}
+                              key={i}
+                            >
+                              {menuItem.type === "link" ? (
+                                <NavLink
+                                  to={menuItem.path + "/"}
+                                  className={`side-menu__item ${menuItem.active ? "active" : ""
+                                    }`}
+                                  onClick={() => {
+                                    setNavActive(menuItem);
+                                    toggletNavActive(menuItem);
+                                  }}
+                                >
+                                  <i
+                                    className={`side-menu__icon fa fa-${menuItem.icon}`}
+                                    aria-hidden="true"
+                                  ></i>
+                                  <span className="side-menu__label">
+                                    {menuItem.title}
+                                  </span>
+                                  {menuItem.badge ? (
+                                    <label
+                                      className={`${menuItem.badge} side-badge`}
+                                    >
+                                      {menuItem.badgetxt}
+                                    </label>
+                                  ) : (
+                                    ""
+                                  )}
+                                </NavLink>
+                              ) : (
+                                ""
+                              )}
+
+                              {menuItem.type === "sub" ? (
+                                <div
+                                  to={menuItem.path + "/"}
+                                  className={`side-menu__item ${menuItem.active ? "active" : ""
+                                    }`}
+                                  onClick={(event) => {
+                                    event.preventDefault();
+                                    setNavActive(menuItem);
+                                  }}
+                                  onMouseEnter={() => {
+                                    if (!isVerticalSidebarOpen) {
+                                      setNavActive(menuItem);
+                                    }
+                                  }}
+                                  // onMouseLeave={() => {
+                                  //   if (menuItem) {
+                                  //     // Check if menuItem is not null or undefined
+                                  //     setNavActive(menuItem);
+                                  //   }
+                                  //   // Optionally, you can clear the active state when the mouse leaves the element.
+                                  //   // setNavActive(null); // Assuming you have a way to clear the active state.
+                                  // }}
+                                  style={{ cursor: "pointer" }
+                                  }
+                                >
+                                  <i
+                                    className={`side-menu__icon fa fa-${menuItem.icon}`}
+                                  ></i>
+                                  <span className="side-menu__label">
+                                    {menuItem.title}
+                                  </span>
+                                  {menuItem.badge ? (
+                                    <label
+                                      className={`${menuItem.badge} side-badge`}
+                                    >
+                                      {menuItem.badgetxt}
+                                    </label>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <i
+                                    className={`${menuItem.background} fa angle fa-angle-right `}
+                                  ></i>
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                              {menuItem.children ? (
+                                <ul
+                                  className="slide-menu"
+                                  style={
+                                    menuItem.active
+                                      ? {
+                                        opacity: 1,
+                                        transition: "opacity 500ms ease-in",
+                                        display: "block",
+                                        background: isVerticalSidebarOpen ? "initial" : "white", // Conditionally set background
+                                        position: isVerticalSidebarOpen ? "initial" : "fixed", // Conditionally set position                                
+                                        zIndex: isVerticalSidebarOpen ? "initial" : 1, // Conditionally set zIndex
+                                        margin: isVerticalSidebarOpen ? "initial" : "auto", // Conditionally set margin
+                                      }
+                                      : { display: "none" }
+                                  }
+                                >
+                                  {menuItem.children.map((childrenItem, index) => {
+                                    return childrenItem.visibility ? (
+                                      <li key={index}>
+                                        {childrenItem.type === "sub" ? (
+                                          <a
+                                            href="javascript"
+                                            className="sub-side-menu__item"
+                                            onClick={(event) => {
+                                              event.preventDefault();
+                                              toggletNavActive(childrenItem);
+                                            }}
+                                          >
+                                            <span className="sub-side-menu__label">
+                                              {childrenItem.title}
+                                            </span>
+                                            {childrenItem.active ? (
+                                              <i className="sub-angle  fa fa-angle-down"></i>
+                                            ) : (
+                                              <i className="sub-angle fa fa-angle-right"></i>
+                                            )}
+                                          </a>
+                                        ) : (
+                                          ""
+                                        )}
+                                        {childrenItem.type === "link" ? (
+                                          <NavLink
+                                            to={childrenItem.path + "/"}
+                                            className="slide-item"
+                                            onClick={() =>
+                                              toggletNavActive(childrenItem)
+                                            }
+                                          >
+                                            {childrenItem.title}
+                                          </NavLink>
+                                        ) : (
+                                          ""
+                                        )}
+                                        {childrenItem.children ? (
+                                          <ul
+                                            className="sub-slide-menu"
+                                            style={
+                                              childrenItem.active
+                                                ? { display: "block" }
+                                                : { display: "none" }
+                                            }
+                                          >
+                                            {childrenItem.children.map(
+                                              (childrenSubItem, key) => (
+                                                <li key={key}>
+                                                  {childrenSubItem.type ===
+                                                    "link" ? (
+                                                    <NavLink
+                                                      to={
+                                                        childrenSubItem.path + "/"
+                                                      }
+                                                      className={`${"sub-slide-item"}`}
+                                                      onClick={() =>
+                                                        toggletNavActive(
+                                                          childrenSubItem
+                                                        )
+                                                      }
+                                                    >
+                                                      {childrenSubItem.title}
+                                                    </NavLink>
+                                                  ) : (
+                                                    ""
+                                                  )}
+                                                </li>
+                                              )
+                                            )}
+                                          </ul>
+                                        ) : (
+                                          ""
+                                        )}
+                                      </li>
+                                    ) : null;
+                                  })}
+                                </ul>
+                              ) : (
+                                ""
+                              )}
+                            </li>
+                          ) : null
+                        )}
+                      </Fragment>
+                    ))}
+                  </ul>
+                  <div className="slide-right" id="slide-right">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                    </svg>
+                  </div>
+                  <div className="slide-rightRTL" id="slide-rightRTL">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="#7b8191"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                    >
+                      <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <div className="slide-rightRTL" id="slide-rightRTL">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="#7b8191"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </aside>
-      </div>
+            </>
+          }
+
+        </aside >
+      </div >
     </>
   );
 };
