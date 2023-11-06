@@ -4,12 +4,12 @@ import { Link, NavLink } from "react-router-dom";
 import Scrollbars from "react-custom-scrollbars";
 import { useSelector } from "react-redux";
 import Loaderimg from "../../Utils/Loader";
-const Sidebar = () => {
+const Sidebar = ({ isVerticalSidebarOpen, setIsVerticalSidebarOpen }) => {
   const [mainmenu, setMainMenu] = useState(MENUITEMS);
   const [permissionsArray, setpermissionsArray] = useState([]);
   const UserPermissions = useSelector((state) => state?.data?.data);
   const loading = useSelector((state) => state.data.loading);
-  const [isVerticalSidebarOpen, setIsVerticalSidebarOpen] = useState(true);
+  // const [isVerticalSidebarOpen, setIsVerticalSidebarOpen] = useState(true);
 
   const [isLoading, setIsLoading] = useState(true);
   const tokenUpdated = localStorage.getItem("tokenupdate") === "true";
@@ -179,13 +179,18 @@ const Sidebar = () => {
     document.querySelector(".app").classList.remove("sidenav-toggled-open");
   }
 
+  const sidebarStyle = {
+    minWidth: isVerticalSidebarOpen ? "0" : "260px",
+  };
+
+
   return (
     <>
       {isLoading || loading ? <Loaderimg /> : null}
 
       <div className="sticky">
         <div className="app-sidebar__overlay"></div>
-        <div style={{ marginTop: "65px" }}></div>
+        <div style={{ marginTop: "62px" }}></div>
         <aside
           // className="app-sidebar"
           // className="d-flex flex-row vertical-bar"
@@ -248,7 +253,7 @@ const Sidebar = () => {
                     </svg>
                   </div>
                   <ul
-                    className={`${isVerticalSidebarOpen ? "side-menu mt-3" : "d-flex flex-wrap px-2 py-1 "} `}
+                    className={`${isVerticalSidebarOpen ? "side-menu mt-3 ul-vertical-list" : "d-flex flex-wrap px-2 py-1"} `}
                     id={`${isVerticalSidebarOpen ? "sidebar-main" : ""} `}
                   // className="side-menu mt-3"
                   // id="sidebar-main"
@@ -262,6 +267,8 @@ const Sidebar = () => {
                               className={`slide ${menuItem.active ? "is-expanded" : ""
                                 }`}
                               key={i}
+                              id={isVerticalSidebarOpen ? "" : "vertical-li-side-bar"}
+                              style={sidebarStyle}
                             >
                               {menuItem.type === "link" ? (
                                 <NavLink
@@ -343,6 +350,14 @@ const Sidebar = () => {
                               )}
                               {menuItem.children ? (
                                 <ul
+                                  onMouseEnter={() => {
+                                    console.log("yessss leaved");
+                                    if (menuItem) {
+                                      // Check if menuItem is not null or undefined
+                                    }
+                                    // Optionally, you can clear the active state when the mouse leaves the element.
+                                    // setNavActive(null); // Assuming you have a way to clear the active state.
+                                  }}
                                   className="slide-menu"
                                   style={
                                     menuItem.active
@@ -354,6 +369,7 @@ const Sidebar = () => {
                                         position: isVerticalSidebarOpen ? "initial" : "fixed", // Conditionally set position                                
                                         zIndex: isVerticalSidebarOpen ? "initial" : 1, // Conditionally set zIndex
                                         margin: isVerticalSidebarOpen ? "initial" : "auto", // Conditionally set margin
+                                        width: isVerticalSidebarOpen ? "initial" : "260px"
                                       }
                                       : { display: "none" }
                                   }
@@ -523,7 +539,7 @@ const Sidebar = () => {
                     </svg>
                   </div>
                   <ul
-                    className={`${isVerticalSidebarOpen ? "side-menu mt-3" : "d-flex flex-wrap px-2 py-1 "} `}
+                    className={`${isVerticalSidebarOpen ? "side-menu mt-3" : "d-flex flex-wrap px-2 py-1 ul-horizontal-list"} `}
                     id={`${isVerticalSidebarOpen ? "sidebar-main" : ""} `}
                   // className="side-menu mt-3"
                   // id="sidebar-main"
@@ -537,6 +553,8 @@ const Sidebar = () => {
                               className={`slide ${menuItem.active ? "is-expanded" : ""
                                 }`}
                               key={i}
+                              id={isVerticalSidebarOpen ? "" : "vertical-li-side-bar"}
+                              style={sidebarStyle}
                             >
                               {menuItem.type === "link" ? (
                                 <NavLink
@@ -629,6 +647,7 @@ const Sidebar = () => {
                                         position: isVerticalSidebarOpen ? "initial" : "fixed", // Conditionally set position                                
                                         zIndex: isVerticalSidebarOpen ? "initial" : 1, // Conditionally set zIndex
                                         margin: isVerticalSidebarOpen ? "initial" : "auto", // Conditionally set margin
+                                        width: isVerticalSidebarOpen ? "initial" : "260px"
                                       }
                                       : { display: "none" }
                                   }

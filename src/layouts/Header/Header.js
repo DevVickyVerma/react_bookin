@@ -5,15 +5,16 @@ import { ToastContainer } from "react-toastify";
 import * as loderdata from "../../data/Component/loderdata/loderdata";
 
 import withApi from "../../Utils/ApiHelper";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Loaderimg from "../../Utils/Loader";
 import SingleAuthModal from "../../data/Modal/SingleAuthModal";
 import { SuccessAlert } from "../../Utils/ToastUtils";
-import { useMyContext } from "../../Utils/MyContext";
-import { toggleVerticalSidebar } from "../../Redux/sidebarSlice";
+import { BiExpandVertical } from "react-icons/bi";
+import { BsDistributeHorizontal } from "react-icons/bs";
+
 
 const Header = (props) => {
-  const { isLoading, getData } = props;
+  const { isLoading, getData, isVerticalSidebarOpen, setIsVerticalSidebarOpen } = props;
   const [isTwoFactorPermissionAvailable, setIsTwoFactorPermissionAvailable] =
     useState(null);
 
@@ -21,6 +22,7 @@ const Header = (props) => {
   const [headingusername, setHeadingUsername] = useState();
   const [usernotification, setnotification] = useState();
   const [ShowTruw, setShowTruw] = useState(false);
+  const [showVerticalIcon, setShowVerticalIcon] = useState(true);
 
   const logout = async (row) => {
     try {
@@ -91,6 +93,7 @@ const Header = (props) => {
 
   const openCloseSidebar = () => {
     document.querySelector(".app").classList.toggle("sidenav-toggled");
+    setShowVerticalIcon(!showVerticalIcon)
   };
   const stringValue = String(UserPermissions?.notifications);
 
@@ -128,9 +131,6 @@ const Header = (props) => {
   const [ukDate, setUkDate] = useState("");
   const [ukTime, setUkTime] = useState("");
 
-
-  const dispatch = useDispatch();
-
   useEffect(() => {
     const intervalId = setInterval(() => {
       const currentDateTime = new Date();
@@ -165,29 +165,69 @@ const Header = (props) => {
       clearInterval(intervalId);
     };
   }, []);
-  const handleSideBarChange = () => {
-    dispatch(toggleVerticalSidebar());
-    console.log("topress");
-  }
+
+  useEffect(() => {
+    // Function to update the state based on the window width
+    const updateSidebarState = () => {
+      if (window.innerWidth <= 500) {
+        setIsVerticalSidebarOpen(true);
+      } else {
+        setIsVerticalSidebarOpen(true);
+      }
+    };
+
+    // Initial state setup
+    updateSidebarState();
+
+    // Add a resize event listener to update the state on window resize
+    window.addEventListener('resize', updateSidebarState);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', updateSidebarState);
+    };
+  }, []);
 
   // console.log(isVerticalSidebarOpen, "isVerticalSidebarOpen");
   return (
     <Navbar expand="md" className="app-header header sticky">
       <Container fluid className="main-container">
         <div className="d-flex align-items-center">
-          <Link
-            aria-label="Hide Sidebar"
-            className="app-sidebar__toggle"
-            to="#"
-            onClick={() => openCloseSidebar()}
-          ></Link>
+          {
+            isVerticalSidebarOpen ?
+              <>
+                <Link
+                  aria-label="Hide Sidebar"
+                  className="app-sidebar__toggle"
+                  to="#"
+                  onClick={() => openCloseSidebar()}
+                ></Link>
+              </>
+              :
+              <>
+              </>
+          }
 
-          <div
-            // onClick={() => dispatch(toggleVerticalSidebar())}
-            onClick={handleSideBarChange}
-          >
-            future button
-          </div>
+          {showVerticalIcon ? <>
+            <div
+              aria-label="Hide Sidebar"
+              className="app-sidebar__vertical"
+              onClick={() => setIsVerticalSidebarOpen(!isVerticalSidebarOpen)}
+            >
+              {
+                isVerticalSidebarOpen ? <>
+                  <BsDistributeHorizontal />
+                </>
+                  :
+                  <>
+                    <BiExpandVertical />
+                  </>
+              }
+            </div>
+
+          </> : <></>}
+
+
           <div className="responsive-logo">
             <Link to={`/dashboard/`} className="header-logo">
               <img

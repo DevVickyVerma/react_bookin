@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchData } from "../Redux/dataSlice";
 
 const App = (props) => {
+  const [isVerticalSidebarOpen, setIsVerticalSidebarOpen] = useState(true);
   const { getData } = props;
   const token = localStorage.getItem("token");
   const axiosInstance = axios.create({
@@ -176,10 +177,12 @@ const App = (props) => {
                 ref={loadingBarRef}
               />
 
-              <Header />
-              <Sidebar />
+              <Header isVerticalSidebarOpen={isVerticalSidebarOpen} setIsVerticalSidebarOpen={setIsVerticalSidebarOpen} />
+              <Sidebar isVerticalSidebarOpen={isVerticalSidebarOpen} setIsVerticalSidebarOpen={setIsVerticalSidebarOpen} />
               <div className="main-content app-content ">
-                <div className="side-app">
+                <div
+                  className={`${isVerticalSidebarOpen ? " side-app-horizontal" : "side-app"} `}
+                >
                   <div className="main-container container-fluid">
                     <Outlet />
                   </div>

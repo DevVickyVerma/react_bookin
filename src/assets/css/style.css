@@ -35649,7 +35649,7 @@ body.rtl {
   }
 
   .sidebar-mini.sidenav-toggled .app-content {
-    margin-left: 80px;
+    /* margin-left: 80px; */
   }
 
   .sidebar-mini.sidenav-toggled .app-sidebar {
@@ -35946,6 +35946,11 @@ body.rtl {
 
 .side-header .header-brand-img.toggle-logo {
   display: none;
+}
+
+
+.sidebar-mini.sidenav-toggled .side-header .header-brand-img.light-logo1 {
+  display: none !important;
 }
 
 .side-header .header-brand-img.light-logo1 {
