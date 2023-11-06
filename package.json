@@ -34,6 +34,8 @@
     "formik": "^2.2.9",
     "formik-file-and-image-input": "^0.0.6",
     "fullcalendar-daygrid": "^5.3.3",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^2.5.1",
     "moment": "^2.29.4",
     "npm-check-updates": "^12.5.8",
     "npx": "^10.2.2",

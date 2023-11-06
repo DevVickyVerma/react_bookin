@@ -473,6 +473,9 @@ const manageNotification = React.lazy(() =>
 const calenderevents = React.lazy(() =>
   import("./components/Calendar/Calendar")
 );
+const invoice = React.lazy(() =>
+  import("./components/Invoice/InvoiceForm")
+);
 
 const Root = () => {
   const store = configureStore({
@@ -593,6 +596,7 @@ const Root = () => {
   const WrappedNominalTypes = withApi(NominalTypes);
   const WrappedNominalTaxCode = withApi(NominalTaxCode);
   const WrappedActivitylogs = withApi(Activitylogs);
+  const Wrappedinvoice = withApi(invoice);
 
   return (
     <Fragment>
@@ -1065,6 +1069,10 @@ const Root = () => {
                   <Route
                     path={`/nominal-tax-code`}
                     element={<WrappedNominalTaxCode />}
+                  />
+                  <Route
+                    path={`/invoice`}
+                    element={<Wrappedinvoice />}
                   />
 
                   <Route>

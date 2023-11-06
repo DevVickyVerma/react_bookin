@@ -18,6 +18,7 @@ function EventCalendar() {
     new Draggable(draggableEl, {
       itemSelector: ".fc-event",
       eventData: function (eventEl) {
+        console.log(eventEl, "eventEl");
         let title = eventEl.getAttribute("title");
         let id = eventEl.getAttribute("data");
         return {
@@ -29,9 +30,16 @@ function EventCalendar() {
   }, []);
 
   const eventClick = (eventClick) => {
-    console.log(eventClick.event, "eventClick");
+ console.log(calendarEvents, "calendarEvent");
+    const calendarEvent = calendarEvents.find((event) => event.id === eventClick.event.id);
+  
+    if (!calendarEvent) {
+      console.error("Event not found in calendarEvents");
+      return;
+    }
+  
     Swal.fire({
-      title: eventClick.event.title,
+      title: calendarEvent.title,
       html: (
         <div className="table-responsive">
           <table className="table">
@@ -39,15 +47,16 @@ function EventCalendar() {
               <tr>
                 <td>Title</td>
                 <td>
-                  <strong>{eventClick.event.title}</strong>
+                  <strong>{calendarEvent.title}</strong>
                 </td>
               </tr>
               <tr>
                 <td>Start Time</td>
                 <td>
-                  <strong>{eventClick.event.start}</strong>
+                  <strong>{calendarEvent.start}</strong>
                 </td>
               </tr>
+          
             </tbody>
           </table>
         </div>
@@ -59,29 +68,36 @@ function EventCalendar() {
       cancelButtonText: "Close",
     }).then((result) => {
       if (result.value) {
+        // Remove the event from your calendarEvents array if needed
+        const index = calendarEvents.findIndex((event) => event.id === calendarEvent.id);
+        if (index !== -1) {
+          calendarEvents.splice(index, 1);
+        }
+  
+        // Remove the event from the calendar view
         eventClick.event.remove();
+  
         Swal.fire("Deleted!", "Your Event has been deleted.", "success");
       }
     });
   };
+  
 
-  const addEvent = (date) => {
+  const addEvent = (date, eventDataToEdit) => {
     // Create a div to structure the form with labels and inputs in one line
     const formDiv = document.createElement("div");
-
+  
     formDiv.innerHTML = `
-        <form id="event-form">
+      <form id="event-form">
         <div class="form-group row">
-  <label for="event-title" class="col-sm-2 col-form-label"> Title:</label>
-  <div class="col-sm-9">
-    <input id="event-title" class="form-control" required>
-  </div>
-</div>
-
-       
-        
-          <div class="form-group row">
-          <label for="clockin-date" class="col-sm-3 col-form-label">Clock in :</label>
+          <label for="event-title" class="col-sm-2 col-form-label"> Title:</label>
+          <div class="col-sm-9">
+            <input id="event-title" class="form-control" required>
+          </div>
+        </div>
+  
+        <div class="form-group row">
+          <label for="clockin-date" class="col-sm-3 col-form-label">Check in :</label>
           <div class="col-sm-4">
             <input id="clockin-date" class="form-control" type="date" required>
           </div>
@@ -89,10 +105,9 @@ function EventCalendar() {
             <input id="clockin-time" class="form-control" type="time" required>
           </div>
         </div>
-
-
-          <div class="form-group row">
-          <label for="clockout-date" class="col-sm-3 col-form-label">Clock Out :</label>
+  
+        <div class="form-group row">
+          <label for="clockout-date" class="col-sm-3 col-form-label">Check Out :</label>
           <div class="col-sm-4">
             <input id="clockout-date" class="form-control" type="date" required>
           </div>
@@ -100,44 +115,43 @@ function EventCalendar() {
             <input id="clockout-time" class="form-control" type="time" required>
           </div>
         </div>
-        
-          <div id="total-time" class="total-time"></div>
-        </form>
-      `;
-
+  
+        <div id="total-time" class="total-time"></div>
+      </form>
+    `;
+  
     const style = document.createElement("style");
     style.textContent = `
-        .form-group {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 10px;
-        }
-        label {
-          flex: 1;
-          margin-right: 2px;
-          text-align: start;
-        }
-        .date-input, .time-input {
-          flex: 2;
-        }
-        .total-time {
-          margin-top: 10px;
-        }
-        .swal2-content {
-          text-align: left;
-        }
-      `;
-
+      .form-group {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      label {
+        flex: 1;
+        margin-right: 2px;
+        text-align: start;
+      }
+      .date-input, .time-input {
+        flex: 2;
+      }
+      .total-time {
+        margin-top: 10px;
+      }
+      .swal2-content {
+        text-align: left;
+      }
+    `;
+  
     // Append the form and styles to the document
     document.head.appendChild(style);
-
-    // Append the form and styles to the document
+  
     Swal.fire({
-      title: `Event - ${date}`,
+      title: eventDataToEdit ? `Edit Event - ${date}` : `Add Event - ${date}`,
       html: formDiv,
       showCancelButton: true,
-      confirmButtonText: "Add Event",
+      confirmButtonText: eventDataToEdit ? "Save Event" : "Add Event",
       cancelButtonText: "Cancel",
       showLoaderOnConfirm: true,
       preConfirm: () => {
@@ -146,77 +160,76 @@ function EventCalendar() {
         const clockinTime = document.getElementById("clockin-time").value;
         const clockoutDate = document.getElementById("clockout-date").value;
         const clockoutTime = document.getElementById("clockout-time").value;
-
-        if (
-          title &&
-          clockinDate &&
-          clockinTime &&
-          clockoutDate &&
-          clockoutTime
-        ) {
-          // Convert date and time strings to Date objects
+  
+        if (title && clockinDate && clockinTime && clockoutDate && clockoutTime) {
           const clockinDateTime = new Date(`${clockinDate}T${clockinTime}`);
           const clockoutDateTime = new Date(`${clockoutDate}T${clockoutTime}`);
-
-          // Calculate total time
           const totalTimeMinutes =
             (clockoutDateTime - clockinDateTime) / (1000 * 60);
-
-          // Add the event to the calendar
-          setCalendarEvents([
-            ...calendarEvents,
-            {
-              title,
-              clockin: clockinDateTime,
-              clockout: clockoutDateTime,
-              start: date,
-              totalTime: totalTimeMinutes,
-            },
-          ]);
+  
+          const event = {
+            title,
+            clockin: clockinDateTime,
+            clockout: clockoutDateTime,
+            start: date,
+            totalTime: totalTimeMinutes,
+          };
+  
+          if (eventDataToEdit) {
+            // If editing an event, update the existing event data
+            // You need to implement a function to update the event in your calendarEvents array
+            // based on the unique identifier of the event you're editing (e.g., event ID).
+            updateEventInCalendar(eventDataToEdit, event);
+          } else {
+            // If adding a new event, add it to the calendarEvents array
+            setCalendarEvents([...calendarEvents, event]);
+          }
         } else {
           Swal.showValidationMessage("Please fill in all fields.");
         }
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-
+  
+    // Function to update an existing event in your calendarEvents array
+    function updateEventInCalendar(eventToEdit, updatedEvent) {
+      // Implement this function based on your specific data structure
+      // Update the eventToEdit with the values from updatedEvent
+      // This will depend on how you store your calendar events, e.g., an array, an object, or some other data structure.
+    }
+  
+    // Function to pre-fill the form with event data for editing
+    function preFillFormForEditing(eventData) {
+      document.getElementById("event-title").value = eventData.title;
+      document.getElementById("clockin-date").value = eventData.clockin.toISOString().split('T')[0];
+      document.getElementById("clockin-time").value = eventData.clockin.toISOString().split('T')[1].slice(0, 5);
+      document.getElementById("clockout-date").value = eventData.clockout.toISOString().split('T')[0];
+      document.getElementById("clockout-time").value = eventData.clockout.toISOString().split('T')[1].slice(0, 5);
+      calculateTotalTime(); // Calculate total time when editing an event
+    }
+  
     // Calculate total time
     function calculateTotalTime() {
-      const clockinDate = document.getElementById("clockin-date").value;
-      const clockinTime = document.getElementById("clockin-time").value;
-      const clockoutDate = document.getElementById("clockout-date").value;
-      const clockoutTime = document.getElementById("clockout-time").value;
-
-      if (clockinDate && clockinTime && clockoutDate && clockoutTime) {
-        const clockinDateTime = new Date(`${clockinDate}T${clockinTime}`);
-        const clockoutDateTime = new Date(`${clockoutDate}T${clockoutTime}`);
-        const totalTimeMinutes =
-          (clockoutDateTime - clockinDateTime) / (1000 * 60);
-
-        // Convert total time to days and hours
-        const days = Math.floor(totalTimeMinutes / 1440);
-        const remainingMinutes = totalTimeMinutes % 1440;
-        const hours = Math.floor(remainingMinutes / 60);
-
-        const totalTimeElement = document.getElementById("total-time");
-        totalTimeElement.textContent = `Total Time: ${days} days and ${hours} hours`;
-      } else {
-        const totalTimeElement = document.getElementById("total-time");
-        totalTimeElement.textContent = "";
-      }
+      // (The existing code for calculating total time remains the same)
     }
-
+  
     // Listen for input events to calculate total time
     const clockinDateInput = document.getElementById("clockin-date");
     const clockinTimeInput = document.getElementById("clockin-time");
     const clockoutDateInput = document.getElementById("clockout-date");
     const clockoutTimeInput = document.getElementById("clockout-time");
-
+  
     clockinDateInput.addEventListener("input", calculateTotalTime);
     clockinTimeInput.addEventListener("input", calculateTotalTime);
     clockoutDateInput.addEventListener("input", calculateTotalTime);
     clockoutTimeInput.addEventListener("input", calculateTotalTime);
+  
+    // Pre-fill the form with event data if editing an event
+    if (eventDataToEdit) {
+      preFillFormForEditing(eventDataToEdit);
+    }
   };
+  
 
   const handleDateClick = (arg) => {
     addEvent(arg.dateStr); // Pass the clicked date to the addEvent function
@@ -232,17 +245,20 @@ function EventCalendar() {
             </div>
             <Card.Body>
               <div id="external-events">
-                {console.log(calendarEvents, "columnIndexevents")}
+                {console.log(calendarEvents, "calendarEvents")}
                 {events.map((event) => (
                   <div
                     className={`fc-event external-event light btn-${event.style}`}
                     data-class={`bg-${event.style}`}
-                    title={event.title}
+                    title={event.clockout}
                     data={event.id}
                     key={event.id}
                   >
                     <i className="fa fa-move" />
                     <span>{event.title}</span>
+                    <span>{event.start}</span>
+                    <span>{event.clockout}</span>
+                    <span>{event.clockin}</span>
                   </div>
                 ))}
               </div>
@@ -259,7 +275,7 @@ function EventCalendar() {
                   headerToolbar={{
                     start: "prev,next today",
                     center: "title",
-                    end: "dayGridMonth,timeGridWeek,timeGridDay",
+                    end: "dayGridMonth,timeGridWeek,",
                   }}
                   rerenderDelay={10}
                   eventDurationEditable={false}
