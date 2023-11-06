@@ -12,7 +12,16 @@ export const MENUITEMS = [
         visibility: false,
         title: "Dashboard",
       },
+      {
+        path: `/event-calender`,
+        icon: "home",
+        type: "link",
+        active: false,
 
+        permission: "dashboard-view",
+        visibility: false,
+        title: "Event-Calender",
+      },
       //user
       {
         title: "Manage Users",
