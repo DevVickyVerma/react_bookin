@@ -470,6 +470,9 @@ const COMINGSOON = React.lazy(() =>
 const manageNotification = React.lazy(() =>
   import("./layouts/Header/Notifications")
 );
+const calenderevents = React.lazy(() =>
+  import("./components/Calendar/Calendar")
+);
 
 const Root = () => {
   const store = configureStore({
@@ -479,6 +482,7 @@ const Root = () => {
   });
   const [token, setToken] = useState(localStorage.getItem("token"));
   const WrappedDashboard = withApi(Dashboard);
+  const Wrappedcalenderevents = withApi(calenderevents);
   const WrappedManageBusinessSubTypes = withApi(ManageBusinessSubTypes);
   const WrappeAddBusinessSubTypes = withApi(AddBusinessSubTypes);
   const WrappedManageClient = withApi(ManageClient);
@@ -719,6 +723,10 @@ const Root = () => {
                   <Route
                     path={`/editmanager/:id`}
                     element={<WrappedEditManneger />}
+                  />
+                  <Route
+                    path={`event-calender`}
+                    element={<Wrappedcalenderevents />}
                   />
 
                   {/* Role  Components End */}
